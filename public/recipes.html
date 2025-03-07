@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Recipes - Crazy Cravings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../assets/Icons/hotdog.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="recipes-page">
+
+<!--**************************************************************************************************************************-->
+
+<div class="top-bar">
+    <div class="search-bar">
+        <button class="search-button"><i class="fas fa-search"></i></button>
+        <input type="text" placeholder="SEARCH RECIPES..." class="search-input">
+    </div>
+    <div class="social-icons">
+        <a href="https://www.linkedin.com/in/janny-jonyo-0b0604173/" target="_blank"><i class="fab fa-linkedin fa-xl"></i></a>
+        <a href="https://github.com/JannyFromTechSupport" target="_blank"><i class="fab fa-github fa-xl"></i></a>
+        <a href="https://www.instagram.com/jony_.o/" target="_blank"><i class="fab fa-instagram fa-xl"></i></a>
+        <a href="https://wa.me/757700440" target="_blank"><i class="fab fa-whatsapp fa-xl"></i></a>
+    </div>
+</div>
+
+<nav class="navigation-bar">
+    <div class="nav-left">
+        <a href="recipes.html">All-Recipes</a>
+        <a href="#">Vegeterian</a>
+        <a href="#">Meat-Lovers</a>
+    </div>
+    <div class="logo">
+        <a href="index.html"><img src="../assets/Icons/Crazy Cravings Logo.png" alt="Site Logo"></a>
+    </div>
+    <div class="nav-right">
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="../public/SignIn.html">Log In</a>
+    </div>
+</nav>
+
+<!--**************************************************************************************************************************-->
+
+    <header>
+        <h1>All Recipes</h1>
+    </header>
+    <main>
+        <form id="search-for-recipe">
+            <label id="recipesearchlabel" for="recipesearch">What's cooking? 😏</label>
+            <input type="text" id="recipesearch" name="recipesearch" placeholder="Enter recipe ID or name...">
+        </form>
+        <button type="submit"><i class="fas fa-search"></i></button>
+        <div id="all-recipes-list" class="recipe-grid"></div>
+    </main>
+
+<!--**************************************************************************************************************************-->
+
+<footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>About</h3>
+        <p>Learn more about my mission and values.</p>
+        <a href="">Meet the Programmer</a>
+      </div>
+  
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="">Contact</a>
+        <a href="SignIn.html">Log In</a>
+      </div>
+  
+      <div class="footer-section">
+        <h3>Social Media</h3>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/janny-jonyo-0b0604173/" target="_blank"><i class="fab fa-linkedin fa-xl"></i></a>
+            <a href="https://github.com/JannyFromTechSupport" target="_blank"><i class="fab fa-github fa-xl"></i></a>
+            <a href="https://www.instagram.com/jony_.o/" target="_blank"><i class="fab fa-instagram fa-xl"></i></a>
+            <a href="https://wa.me/757700440" target="_blank"><i class="fab fa-whatsapp fa-xl"></i></a>
+        </div>
+      </div>
+    </div>
+  
+    <div class="footer-copyright">
+      &copy; 2024 Crazy Cravings. All rights reserved.
+    </div>
+  </footer>
+
+<!--**************************************************************************************************************************-->
+
+    <script>
+        async function fetchAllRecipes() {
+            try {
+                const response = await fetch('http://localhost:3000/api/recipes');
+                if (response.ok) {
+                    const recipes = await response.json();
+                    displayRecipes(recipes);
+                } else {
+                    console.error('Failed to fetch recipes.');
+                }
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+            }
+        }
+    
+        async function fetchRecipes(query) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/recipes/search?query=${query}`);
+                if (response.ok) {
+                    const recipes = await response.json();
+                    displayRecipes(recipes);
+                } else {
+                    console.error('Failed to fetch searched recipes.');
+                }
+            } catch (error) {
+                console.error('Error fetching searched recipes:', error);
+            }
+        }
+    
+        function displayRecipes(recipes) {
+            const recipesList = document.getElementById('all-recipes-list');
+            recipesList.innerHTML = '';  
+    
+            if (recipes.length === 0) {
+                recipesList.innerHTML = '<p>No recipes found.</p>';
+            } else {
+                recipes.forEach(recipe => {
+                    const recipeItem = document.createElement('div');
+                    recipeItem.className = 'recipe-item';
+                    recipeItem.innerHTML = `
+                        <img src="${recipe.ImageURL || '../assets/Images/default-image.jpg'}" alt="${recipe.Title}" class="recipe-image">
+                        <div class="recipe-details">
+                            <h4>${recipe.Title}</h4>
+                            <h5>${recipe.Category}</h5>
+                            <p><strong>Description:</strong> ${recipe.Description}</p>
+                            <p><strong>Ingredients:</strong> ${recipe.Ingredients.join(', ')}</p>
+                            <p><strong>Instructions:</strong> ${recipe.Instructions.join('<br>')}</p>
+                        </div>
+                    `;
+                    recipesList.appendChild(recipeItem);
+                });
+            }
+        }
+    
+        document.getElementById('search-for-recipe').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const query = document.getElementById('recipesearch').value.trim();
+            if (query) {
+                fetchRecipes(query); 
+            } else {
+                fetchAllRecipes();
+            }
+        });
+    
+        fetchAllRecipes();
+    </script>
+    
+</body>
+</html>

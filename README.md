@@ -1,6 +1,6 @@
 # Crazy-Cravings
 
-A tasty Recipe Website that demonstrates mastery of **Express, Node.js and backend development.** 
+A tasty Recipe Website that demonstrates mastery of **Express, Node.js and Back End Development.** 
 
 ![Crazy Cravings Logo](https://github.com/user-attachments/assets/62001b83-6453-45a7-9f2f-07863358ecda)
 
